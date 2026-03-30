@@ -1,18 +1,14 @@
-----------------------------------------------------------------------------------------
-      name:  <unnamed>
-       log:  /Users/akhtarfarrel/Downloads/education_poverty_log.log
-  log type:  text
- opened on:  30 Mar 2026, 11:54:24
+
+
 
 . * ---------------------------------------------------------------------------- *
 
-. * 0. LOAD DATA
+. * 0. Load Data 
 
 . * ---------------------------------------------------------------------------- *
 
 . 
-. import delimited "/Users/akhtarfarrel/Downloads/indonesia_provincial_socioeconomic_202
-> 4.csv", clear
+. import delimited "pathname", clear
 (16 vars, 39 obs)
 
 . 
@@ -30,7 +26,7 @@
 . 
 . * ---------------------------------------------------------------------------- *
 
-. * 1. RENAME VARIABLES
+. * 1. Rename Variables 
 
 . * ---------------------------------------------------------------------------- *
 
@@ -68,7 +64,7 @@
 . 
 . * ---------------------------------------------------------------------------- *
 
-. * 2. EDA
+. * 2. Exploratory Data Analysis 
 
 . * ---------------------------------------------------------------------------- *
 
@@ -202,8 +198,7 @@
 > te by Province") xtitle("Mean Years of Schooling") ytitle("Poverty Headcount Rate (%)"
 > ) note("Source: BPS 2024")
 
-. graph export "/Users/akhtarfarrel/Downloads/scatter_educ_poverty.png", replace
-(file /Users/akhtarfarrel/Downloads/scatter_educ_poverty.png written in PNG format)
+
 
 . 
 . * --- 2.6 Scatter: GRDP vs Poverty ---
@@ -212,8 +207,7 @@
 > overty Rate by Province") xtitle("GRDP per Capita (Thousand Rp)") ytitle("Poverty Head
 > count Rate (%)")  note("Source: BPS 2024")
 
-. graph export "/Users/akhtarfarrel/Downloads/scatter_grdp_poverty.png", replace
-(file /Users/akhtarfarrel/Downloads/scatter_grdp_poverty.png written in PNG format)
+
 
 . 
 . * --- 2.7 Histogram ---
@@ -221,9 +215,6 @@
 . histogram poverty, title("Distribution of Poverty Rate across Provinces") xtitle("Pove
 > rty Headcount Rate (%)") normal
 (bin=6, start=3.8, width=4.31)
-
-. graph export "/Users/akhtarfarrel/Downloads/hist_poverty.png", replace
-(file /Users/akhtarfarrel/Downloads/hist_poverty.png written in PNG format)
 
 . 
 . * --- 2.8 Top 5 and Bottom 5 by poverty ---
@@ -261,7 +252,7 @@
 . 
 . * ---------------------------------------------------------------------------- *
 
-. * 3. REGRESSION ANALYSIS
+. * 3. Regression Analysis 
 
 . * ---------------------------------------------------------------------------- *
 
@@ -377,7 +368,7 @@ Regression Results: Determinants of Provincial Poverty
 . 
 . * ---------------------------------------------------------------------------- *
 
-. * 4. ROBUSTNESS CHECK — Log GRDP
+. * 4. Robustness Check — Log GRDP
 
 . * ---------------------------------------------------------------------------- *
 
@@ -439,14 +430,10 @@ Regression Results (incl. Log-GRDP robustness check)
 . 
 . ********************************************************************************
 
-. * END OF DO-FILE
+. * End of Do-file
 
 . ********************************************************************************
 
 . 
 . log close
-      name:  <unnamed>
-       log:  /Users/akhtarfarrel/Downloads/education_poverty_log.log
-  log type:  text
- closed on:  30 Mar 2026, 11:56:17
-----------------------------------------------------------------------------------------
+
