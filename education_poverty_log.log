@@ -1,0 +1,452 @@
+----------------------------------------------------------------------------------------
+      name:  <unnamed>
+       log:  /Users/akhtarfarrel/Downloads/education_poverty_log.log
+  log type:  text
+ opened on:  30 Mar 2026, 11:54:24
+
+. * ---------------------------------------------------------------------------- *
+
+. * 0. LOAD DATA
+
+. * ---------------------------------------------------------------------------- *
+
+. 
+. import delimited "/Users/akhtarfarrel/Downloads/indonesia_provincial_socioeconomic_202
+> 4.csv", clear
+(16 vars, 39 obs)
+
+. 
+. label data "Indonesia Provincial Socioeconomic 2024"
+
+. 
+. drop if province == "INDONESIA"
+(1 observation deleted)
+
+. 
+. count
+  38
+
+. 
+. 
+. * ---------------------------------------------------------------------------- *
+
+. * 1. RENAME VARIABLES
+
+. * ---------------------------------------------------------------------------- *
+
+. 
+. rename grdp_per_capita_thousand_rp_2024   grdp_pc
+
+. rename mean_years_schooling_2024          educ
+
+. rename poverty_total_sep2024              poverty
+
+. rename internet_pct_total_2024            internet
+
+. rename unemployment_pct_aug2024           unemp
+
+. rename life_exp_male_2024                 le_male
+
+. rename life_exp_female_2024               le_female
+
+. 
+. label variable grdp_pc   "GRDP per Capita (Thousand Rp, 2024)"
+
+. label variable educ      "Mean Years of Schooling, Age 15+ (2024)"
+
+. label variable poverty   "Poverty Headcount Rate - Total % (Sep 2024)"
+
+. label variable internet  "HH Internet Access - Total % (2024)"
+
+. label variable unemp     "Open Unemployment Rate - Aug 2024 (%)"
+
+. label variable le_male   "Life Expectancy at Birth - Male (2024)"
+
+. label variable le_female "Life Expectancy at Birth - Female (2024)"
+
+. 
+. 
+. * ---------------------------------------------------------------------------- *
+
+. * 2. EDA
+
+. * ---------------------------------------------------------------------------- *
+
+. 
+. * --- 2.1 Summary Statistics ---
+
+. summarize poverty educ grdp_pc unemp internet, detail
+
+         Poverty Headcount Rate - Total % (Sep 2024)
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          3.8            3.8
+ 5%         4.02           4.02
+10%         4.78           4.14       Obs                  38
+25%          5.7           4.78       Sum of Wgt.          38
+
+50%         9.57                      Mean           10.66474
+                        Largest       Std. Dev.      6.366754
+75%        12.64          19.35
+90%        19.35          21.09       Variance       40.53556
+95%         27.6           27.6       Skewness       1.322288
+99%        29.66          29.66       Kurtosis       4.291709
+
+           Mean Years of Schooling, Age 15+ (2024)
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%          5.1            5.1
+ 5%         6.17           6.17
+10%         8.47           8.28       Obs                  38
+25%         8.78           8.47       Sum of Wgt.          38
+
+50%         9.34                      Mean           9.292368
+                        Largest       Std. Dev.      1.148888
+75%         9.95          10.48
+90%        10.48          10.65       Variance       1.319943
+95%         10.7           10.7       Skewness      -1.538253
+99%        11.49          11.49       Kurtosis        7.07992
+
+             GRDP per Capita (Thousand Rp, 2024)
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%        18105          18105
+ 5%        24303          24303
+10%        32282          32199       Obs                  38
+25%        51387          32282       Sum of Wgt.          38
+
+50%        68596                      Mean           84377.34
+                        Largest       Std. Dev.      62202.93
+75%        81009         165350
+90%       165350         198677       Variance       3.87e+09
+95%       212117         212117       Skewness       2.395269
+99%       344383         344383       Kurtosis       9.563141
+
+            Open Unemployment Rate - Aug 2024 (%)
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%         1.32           1.32
+ 5%         1.79           1.79
+10%         2.73           2.68       Obs                  38
+25%         3.13           2.73       Sum of Wgt.          38
+
+50%         4.19                      Mean           4.379737
+                        Largest       Std. Dev.      1.414222
+75%         5.75           6.48
+90%         6.48           6.48       Variance       2.000024
+95%         6.68           6.68       Skewness       .0132985
+99%         6.75           6.75       Kurtosis        2.22995
+
+             HH Internet Access - Total % (2024)
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%        12.15          12.15
+ 5%        36.08          36.08
+10%        81.99          65.71       Obs                  38
+25%        87.28          81.99       Sum of Wgt.          38
+
+50%       90.375                      Mean           86.27447
+                        Largest       Std. Dev.       15.9913
+75%        92.16          94.58
+90%        94.58          95.45       Variance       255.7218
+95%        97.57          97.57       Skewness      -3.582948
+99%        98.18          98.18       Kurtosis       15.61315
+
+. 
+. * --- 2.2 Missing values ---
+
+. misstable summarize poverty educ grdp_pc unemp internet
+(variables nonmissing or string)
+
+. 
+. * --- 2.3 Tabstat ---
+
+. tabstat poverty educ grdp_pc unemp internet, stats(n mean sd min p25 p50 p75 max) col(
+> stats)
+
+    variable |         N      mean        sd       min       p25       p50       p75
+-------------+----------------------------------------------------------------------
+     poverty |        38  10.66474  6.366754       3.8       5.7      9.57     12.64
+        educ |        38  9.292368  1.148888       5.1      8.78      9.34      9.95
+     grdp_pc |        38  84377.34  62202.93     18105     51387     68596     81009
+       unemp |        38  4.379737  1.414222      1.32      3.13      4.19      5.75
+    internet |        38  86.27447   15.9913     12.15     87.28    90.375     92.16
+------------------------------------------------------------------------------------
+
+    variable |       max
+-------------+----------
+     poverty |     29.66
+        educ |     11.49
+     grdp_pc |    344383
+       unemp |      6.75
+    internet |     98.18
+------------------------
+
+. 
+. * --- 2.4 Correlation matrix ---
+
+. pwcorr poverty educ grdp_pc unemp internet, star(0.05)
+
+             |  poverty     educ  grdp_pc    unemp internet
+-------------+---------------------------------------------
+     poverty |   1.0000 
+        educ |  -0.5459*  1.0000 
+     grdp_pc |  -0.2995   0.4149*  1.0000 
+       unemp |  -0.3338*  0.6203*  0.2301   1.0000 
+    internet |  -0.8064*  0.7785*  0.2293   0.4342*  1.0000 
+
+. 
+. * --- 2.5 Scatter: Education vs Poverty ---
+
+. scatter poverty educ, mlabel(province) mlabsize(vsmall) title("Education vs Poverty Ra
+> te by Province") xtitle("Mean Years of Schooling") ytitle("Poverty Headcount Rate (%)"
+> ) note("Source: BPS 2024")
+
+. graph export "/Users/akhtarfarrel/Downloads/scatter_educ_poverty.png", replace
+(file /Users/akhtarfarrel/Downloads/scatter_educ_poverty.png written in PNG format)
+
+. 
+. * --- 2.6 Scatter: GRDP vs Poverty ---
+
+. scatter poverty grdp_pc, mlabel(province) mlabsize(vsmall) title("GRDP per Capita vs P
+> overty Rate by Province") xtitle("GRDP per Capita (Thousand Rp)") ytitle("Poverty Head
+> count Rate (%)")  note("Source: BPS 2024")
+
+. graph export "/Users/akhtarfarrel/Downloads/scatter_grdp_poverty.png", replace
+(file /Users/akhtarfarrel/Downloads/scatter_grdp_poverty.png written in PNG format)
+
+. 
+. * --- 2.7 Histogram ---
+
+. histogram poverty, title("Distribution of Poverty Rate across Provinces") xtitle("Pove
+> rty Headcount Rate (%)") normal
+(bin=6, start=3.8, width=4.31)
+
+. graph export "/Users/akhtarfarrel/Downloads/hist_poverty.png", replace
+(file /Users/akhtarfarrel/Downloads/hist_poverty.png written in PNG format)
+
+. 
+. * --- 2.8 Top 5 and Bottom 5 by poverty ---
+
+. gsort -poverty
+
+. list province poverty educ grdp_pc in 1/5
+
+     +------------------------------------------------+
+     |            province   poverty   educ   grdp_pc |
+     |------------------------------------------------|
+  1. |    PAPUA PEGUNUNGAN     29.66    5.1     18105 |
+  2. |        PAPUA TENGAH      27.6   6.17    118774 |
+  3. |         PAPUA BARAT     21.09   9.87    131636 |
+  4. |       PAPUA SELATAN     19.35   8.99     61622 |
+  5. | NUSA TENGGARA TIMUR     19.02   8.48     24303 |
+     +------------------------------------------------+
+
+. 
+. gsort +poverty
+
+. list province poverty educ grdp_pc in 1/5
+
+     +--------------------------------------------------+
+     |             province   poverty    educ   grdp_pc |
+     |--------------------------------------------------|
+  1. |                 BALI       3.8    9.87     67318 |
+  2. |   KALIMANTAN SELATAN      4.02    9.02     67122 |
+  3. |          DKI JAKARTA      4.14   11.49    344383 |
+  4. |            KEP. RIAU      4.78   10.65    161424 |
+  5. | KEP. BANGKA BELITUNG      5.08    8.78     70193 |
+     +--------------------------------------------------+
+
+. 
+. 
+. * ---------------------------------------------------------------------------- *
+
+. * 3. REGRESSION ANALYSIS
+
+. * ---------------------------------------------------------------------------- *
+
+. 
+. * --- Model 1: Bivariate ---
+
+. regress poverty educ
+
+      Source |       SS           df       MS      Number of obs   =        38
+-------------+----------------------------------   F(1, 36)        =     15.28
+       Model |  446.982127         1  446.982127   Prob > F        =    0.0004
+    Residual |  1052.83365        36  29.2453791   R-squared       =    0.2980
+-------------+----------------------------------   Adj R-squared   =    0.2785
+       Total |  1499.81578        37  40.5355615   Root MSE        =    5.4079
+
+------------------------------------------------------------------------------
+     poverty |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |  -3.025288   .7738383    -3.91   0.000    -4.594704   -1.455871
+       _cons |   38.77682   7.244107     5.35   0.000     24.08509    53.46855
+------------------------------------------------------------------------------
+
+. estimates store model1
+
+. 
+. * --- Model 2: With controls ---
+
+. regress poverty educ grdp_pc unemp internet
+
+      Source |       SS           df       MS      Number of obs   =        38
+-------------+----------------------------------   F(4, 33)        =     19.68
+       Model |  1056.76864         4   264.19216   Prob > F        =    0.0000
+    Residual |  443.047137        33  13.4256708   R-squared       =    0.7046
+-------------+----------------------------------   Adj R-squared   =    0.6688
+       Total |  1499.81578        37  40.5355615   Root MSE        =    3.6641
+
+------------------------------------------------------------------------------
+     poverty |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   2.168162   1.035499     2.09   0.044     .0614233      4.2749
+     grdp_pc |  -.0000212   .0000108    -1.96   0.058    -.0000432    7.85e-07
+       unemp |  -.3719924   .5465486    -0.68   0.501    -1.483954    .7399691
+    internet |  -.4091125   .0611909    -6.69   0.000    -.5336063   -.2846187
+       _cons |   29.23142   5.457004     5.36   0.000     18.12906    40.33378
+------------------------------------------------------------------------------
+
+. estimates store model2
+
+. 
+. * --- Side-by-side comparison ---
+
+. estimates table model1 model2, b(%9.4f) se(%9.4f) stats(N r2 r2_a) title("Regression R
+> esults: Determinants of Provincial Poverty")
+
+Regression Results: Determinants of Provincial Poverty
+
+--------------------------------------
+    Variable |  model1      model2    
+-------------+------------------------
+        educ |   -3.0253      2.1682  
+             |    0.7738      1.0355  
+     grdp_pc |               -0.0000  
+             |                0.0000  
+       unemp |               -0.3720  
+             |                0.5465  
+    internet |               -0.4091  
+             |                0.0612  
+       _cons |   38.7768     29.2314  
+             |    7.2441      5.4570  
+-------------+------------------------
+           N |        38          38  
+          r2 |    0.2980      0.7046  
+        r2_a |    0.2785      0.6688  
+--------------------------------------
+                          legend: b/se
+
+. 
+. * --- Post-estimation diagnostics for Model 2 ---
+
+. regress poverty educ grdp_pc unemp internet
+
+      Source |       SS           df       MS      Number of obs   =        38
+-------------+----------------------------------   F(4, 33)        =     19.68
+       Model |  1056.76864         4   264.19216   Prob > F        =    0.0000
+    Residual |  443.047137        33  13.4256708   R-squared       =    0.7046
+-------------+----------------------------------   Adj R-squared   =    0.6688
+       Total |  1499.81578        37  40.5355615   Root MSE        =    3.6641
+
+------------------------------------------------------------------------------
+     poverty |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   2.168162   1.035499     2.09   0.044     .0614233      4.2749
+     grdp_pc |  -.0000212   .0000108    -1.96   0.058    -.0000432    7.85e-07
+       unemp |  -.3719924   .5465486    -0.68   0.501    -1.483954    .7399691
+    internet |  -.4091125   .0611909    -6.69   0.000    -.5336063   -.2846187
+       _cons |   29.23142   5.457004     5.36   0.000     18.12906    40.33378
+------------------------------------------------------------------------------
+
+. estat vif
+
+    Variable |       VIF       1/VIF  
+-------------+----------------------
+        educ |      3.90    0.256377
+    internet |      2.64    0.378960
+       unemp |      1.65    0.607353
+     grdp_pc |      1.25    0.803071
+-------------+----------------------
+    Mean VIF |      2.36
+
+. rvfplot, yline(0)
+
+. 
+. 
+. * ---------------------------------------------------------------------------- *
+
+. * 4. ROBUSTNESS CHECK — Log GRDP
+
+. * ---------------------------------------------------------------------------- *
+
+. 
+. gen ln_grdp_pc = ln(grdp_pc)
+
+. label variable ln_grdp_pc "Log GRDP per Capita"
+
+. 
+. regress poverty educ ln_grdp_pc unemp internet
+
+      Source |       SS           df       MS      Number of obs   =        38
+-------------+----------------------------------   F(4, 33)        =     19.80
+       Model |  1058.62174         4  264.655434   Prob > F        =    0.0000
+    Residual |   441.19404        33  13.3695164   R-squared       =    0.7058
+-------------+----------------------------------   Adj R-squared   =    0.6702
+       Total |  1499.81578        37  40.5355615   Root MSE        =    3.6564
+
+------------------------------------------------------------------------------
+     poverty |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        educ |   2.074791   1.015113     2.04   0.049     .0095281    4.140055
+  ln_grdp_pc |  -2.322055   1.160496    -2.00   0.054    -4.683103     .038992
+       unemp |  -.3423774   .5447692    -0.63   0.534    -1.450719     .765964
+    internet |  -.3941901   .0602457    -6.54   0.000    -.5167609   -.2716192
+       _cons |   52.80194   11.48674     4.60   0.000       29.432    76.17189
+------------------------------------------------------------------------------
+
+. estimates store model3
+
+. 
+. estimates table model1 model2 model3, b(%9.4f) se(%9.4f) stats(N r2 r2_a) title("Regre
+> ssion Results (incl. Log-GRDP robustness check)")
+
+Regression Results (incl. Log-GRDP robustness check)
+
+--------------------------------------------------
+    Variable |  model1      model2      model3    
+-------------+------------------------------------
+        educ |   -3.0253      2.1682      2.0748  
+             |    0.7738      1.0355      1.0151  
+     grdp_pc |               -0.0000              
+             |                0.0000              
+       unemp |               -0.3720     -0.3424  
+             |                0.5465      0.5448  
+    internet |               -0.4091     -0.3942  
+             |                0.0612      0.0602  
+  ln_grdp_pc |                           -2.3221  
+             |                            1.1605  
+       _cons |   38.7768     29.2314     52.8019  
+             |    7.2441      5.4570     11.4867  
+-------------+------------------------------------
+           N |        38          38          38  
+          r2 |    0.2980      0.7046      0.7058  
+        r2_a |    0.2785      0.6688      0.6702  
+--------------------------------------------------
+                                      legend: b/se
+
+. 
+. ********************************************************************************
+
+. * END OF DO-FILE
+
+. ********************************************************************************
+
+. 
+. log close
+      name:  <unnamed>
+       log:  /Users/akhtarfarrel/Downloads/education_poverty_log.log
+  log type:  text
+ closed on:  30 Mar 2026, 11:56:17
+----------------------------------------------------------------------------------------
